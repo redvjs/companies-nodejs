@@ -9,32 +9,6 @@
 {% block content %}
 
   <form action="register" method="post">
-    {{ govukSelect({
-    id: "type",
-    name: "type",
-    label: {
-        text: "Company Type"
-    },
-    items: [
-        {
-        value: "LTD",
-        text: "Limited Partnership",
-        selected: true
-        },
-        {
-        value: "LLP",
-        text: "Limited Liability Partnership"
-        },
-        {
-        value: "FXC",
-        text: "Foreign Company"
-        },
-        {
-        value: "NPO",
-        text: "Nonprofit organisation"
-        }
-    ]
-    }) }}
     {{ govukInput({
     label: {
         text: "What is the company Name?",
@@ -42,11 +16,10 @@
         isPageHeading: true
     },
     id: "companyName",
-    name: "companyName",
-    attributes: {
-          required: "required"
-        }
-    }) }}
+    name: "companyName"
+    }) 
+    
+    }}
     {% call govukFieldset({
   legend: {
     text: "What is the registered address?",
@@ -61,10 +34,7 @@
     },
     id: "address-line-1",
     name: "addressLine1",
-    autocomplete: "address-line1",
-    attributes: {
-      required: "required"
-    }
+    autocomplete: "address-line1"
   }) }}
 
   {{ govukInput({
@@ -74,10 +44,7 @@
     classes: "govuk-!-width-two-thirds",
     id: "address-town",
     name: "addressTown",
-    autocomplete: "address-level2",
-    attributes: {
-      required: "required"
-    }
+    autocomplete: "address-level2"
   }) }}
 
   {{ govukInput({
@@ -86,10 +53,7 @@
     },
     classes: "govuk-!-width-two-thirds",
     id: "address-county",
-    name: "addressCounty",
-    attributes: {
-      required: "required"
-    }
+    name: "addressCounty"
   }) }}
 
   {{ govukInput({
@@ -102,8 +66,7 @@
     autocomplete: "postal-code",
     attributes: {
       minLength: "6",
-      maxLength: "7",
-      required: "required"
+      maxLength: "7"
     }
   }) }}
 {% endcall %}
