@@ -1,0 +1,30 @@
+{% extends 'layout.njk' %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+<p class="govuk-body">
+  Here is the team hard at work to build a marshmallow tower with spaghetti...
+</p>
+
+{% block content %}
+  <img src="images/IMG_2866.jpeg" alt="Companies House Junior Devs hard at work during training.">
+  <img src="images/IMG_2867.jpeg" alt="Companies House Junior Devs hard at work during training.">
+
+  <p class="govuk-body">
+    We don't usually show photos or images on the Companies House website, but these were too precious to miss...
+  </p>
+
+  {{ govukWarningText({
+    text: "We avoid using images for unnecessary decoration. We only use images if there’s a real user need.",
+    iconFallbackText: "Warning"
+  }) }}
+
+  <p class="govuk-body">
+    Check out the GOV.UK Design System
+    <a href="https://design-system.service.gov.uk/styles/images/" class="govuk-link govuk-link--no-visited-state">
+      guidelines on images
+    </a>
+    for more information.
+  </p>
+
+{% endblock %}

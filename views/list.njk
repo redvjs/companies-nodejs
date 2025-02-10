@@ -1,0 +1,80 @@
+{% extends 'layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+
+{% block content %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+  {% set companyList = [] %}
+  {% for company in companies %}
+    {% set companyList = companyList.concat([[
+      {
+        text: company.type 
+      },
+      { 
+        text: company.registrationNumber 
+      },
+      { 
+        text: company.companyName 
+      },
+      { 
+        text: company.registeredAddress 
+      },
+      { 
+        text: "Active" if not company.isActive
+      },
+      { 
+        text: company.incorporatedOn 
+      },
+      { 
+        html: "<a href=\"/companies/delete/"+company.registrationNumber+"\">🔪📁☠️</a>" 
+      }
+    ]]) %}
+  {% endfor %}
+  
+    
+
+{{ govukTable({
+  caption: "Companies",
+  captionClasses: "govuk-table__caption--m",
+  firstCellIsHeader: true,
+  head: [
+    {
+      text: "Type"
+    },
+    {
+      text: "Number"
+    },
+    {
+      text: "Company Name"
+    },
+    {
+      text: "Address"
+    },
+    {
+        text: "Active"
+    },
+    {
+        text: "Incorporated On"
+    },
+    {
+        text:"Delete"
+    }
+  ],
+  rows: companyList
+}) }}
+
+
+  <p class="govuk-body">
+    Check out the GOV.UK Design System
+    <a href="https://design-system.service.gov.uk/styles/images/" class="govuk-link govuk-link--no-visited-state">
+      guidelines on images
+    </a>
+    for more information.
+  </p>
+
+{% endblock %}

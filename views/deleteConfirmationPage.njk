@@ -1,0 +1,27 @@
+{% extends 'layout.njk' %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block content %}
+
+{{ govukBackLink({
+  text: "Back",
+  href: "/companies"
+}) }}
+
+  {{ govukPanel({
+    titleText: "Company has been deleted from our registry",
+    text: "Theres nothing else to do here"
+  }) }}
+
+  <p class="govuk-body">
+    Check out the GOV.UK Design System
+    <a href="https://design-system.service.gov.uk/styles/images/" class="govuk-link govuk-link--no-visited-state">
+      guidelines on images
+    </a>
+    for more information.
+  </p>
+
+{% endblock %}

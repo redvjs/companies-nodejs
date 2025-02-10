@@ -1,0 +1,23 @@
+volumes:
+  h2db:
+
+networks:
+  chrnet:
+services:
+  backend:
+    image: ch/companies-java:v1
+    networks:
+      - chrnet
+    volumes:
+      - h2db:/docsapp/h2
+  frontend:
+    image: ch/companies-nodejs:v1
+    networks:
+      - chrnet
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    depends_on: ["backend"]
+    environment:
+      TARGET_URL: "http://backend:8080/"

@@ -1,0 +1,130 @@
+{% extends 'layout.njk' %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
+{% from "govuk/components/header/macro.njk" import govukHeader %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+
+{%block content %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/companies"
+}) }}
+
+
+{{ govukNotificationBanner({
+  text: "Once a company is deleted, theres no way to get it back"
+}) }}
+
+
+{{ govukSummaryList({
+  rows: [
+    {
+        key: {
+            text: "Company"
+        }
+    },
+    {
+      key: {
+        text: "Registration Number"
+      },
+      value: {
+        text: company.registrationNumber
+      }
+    },
+    {
+      key: {
+        text: "Type"
+      },
+      value: {
+        text: company.type
+      }
+    },
+    {
+      key: {
+        text: "Name"
+      },
+      value: {
+        text: company.companyName
+      }
+    },
+    {
+      key: {
+        text: "Address"
+      },
+      value: {
+        text: company.registrationNumber
+      }
+    },
+    {
+      key: {
+        text: "Company Incorporated On"
+      },
+      value: {
+        text: company.incorporatedOn
+      }
+    }
+  ]
+}) }}
+{{ govukWarningText({
+  text: "This company will deleted forever",
+  iconFallbackText: "Warning"
+}) }}
+<form action = {{company.registrationNumber}} method = "post">
+  
+  {{ govukCheckboxes({
+  name: "confirm",
+  fieldset: {
+    legend: {
+      text: "Confirm you want to delete this company",
+      isPageHeading: true,
+      classes: "govuk-fieldset__legend--l"
+    }
+  },
+  hint: {
+    text: "By confirming you are agreeing to delete this company."
+  },
+  items: [
+    {
+      value: "confirmation",
+      text: "Click here if you're certain you want to delete your company.",
+      label: {
+        
+      }
+    }
+  ]
+  }) }}
+  {{ govukButton({
+    text: "Delete Company",
+    classes: "govuk-button--warning",
+    attributes: {
+        disabled: "disabled",
+        id: "delete-button"
+
+    }
+  }) }}
+</form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const checkbox = document.querySelector("input[name='confirm']");
+    const deleteButton = document.getElementById("delete-button");
+
+    checkbox.addEventListener("change", function() { 
+      if (this.checked) {
+        deleteButton.disabled = false;
+      } else {
+        deleteButton.disabled = true;
+      }
+    });
+  });
+</script>
+
+
+{{ govukFooter({}) }}
+{% endblock %}

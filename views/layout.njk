@@ -1,0 +1,195 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes -%}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink -%}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{%- set menuButtonText = params.menuButtonText if params.menuButtonText else 'Menu' -%}
+
+<!DOCTYPE html>
+<html lang="{{ htmlLang | default("en", true) }}" class="govuk-template {%- if htmlClasses %} {{ htmlClasses }}{% endif %}">
+<head>
+    <meta charset="utf-8">
+    <title {%- if pageTitleLang %} lang="{{ pageTitleLang }}"{% endif %}>{% block pageTitle %}GOV.UK - Welcome to Companies House{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="{{ themeColor | default("#0b0c0c", true) }}"> {#- Hardcoded value of $govuk-black #}
+    <link rel="stylesheet" href="/govuk/govuk-frontend.min.css">
+
+    {% block headIcons %}
+        <link rel="icon" sizes="48x48" href="{{ assetPath | default("/assets", true) }}/images/favicon.ico">
+        <link rel="icon" sizes="any" href="{{ assetPath | default("/assets", true) }}/images/favicon.svg" type="image/svg+xml">
+        <link rel="mask-icon" href="{{ assetPath | default("/assets", true) }}/images/govuk-icon-mask.svg" color="{{ themeColor | default("#0b0c0c") }}"> {#- Hardcoded value of $govuk-black #}
+        <link rel="apple-touch-icon" href="{{ assetPath | default("/assets", true) }}/images/govuk-icon-180.png">
+        <link rel="manifest" href="{{ assetPath | default("/assets", true) }}/manifest.json">
+    {% endblock %}
+
+    {% block head %}{% endblock %}
+
+    {#- OpenGraph images needs to be absolute, so we need either a URL for the image or for assetUrl to be set #}
+    {% if opengraphImageUrl or assetUrl %}
+        <meta property="og:image" content="{{ opengraphImageUrl | default(assetUrl + "/images/govuk-opengraph-image.png", true) }}">
+    {% endif %}
+</head>
+<body class="govuk-template__body {%- if bodyClasses %} {{ bodyClasses }}{% endif %}" {{- govukAttributes(bodyAttributes) }}>
+<script {%- if cspNonce %} nonce="{{ cspNonce }}"{% endif %}>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+{% block bodyStart %}{% endblock %}
+
+{% block skipLink %}
+    {{ govukSkipLink({
+        href: '#main-content',
+        text: 'Skip to main content'
+    }) }}
+{% endblock %}
+
+{% block header %}
+
+    <header class="govuk-header {%- if params.classes %} {{ params.classes }}{% endif %}" data-module="govuk-header"
+            {{- govukAttributes(params.attributes) }}>
+        <div class="govuk-header__container {{ params.containerClasses | default("govuk-width-container", true) }}">
+            <div class="govuk-header__logo" style="width:33.33%">
+                <a href="https://find-and-update.company-information.service.gov.uk" title="Go to the companies house homepage" id="logo" class="govuk-header__link govuk-header__link--homepage" data-event-id="companies-house-header-link" style="display: flex; align-items: center;">
+                    <img style="margin-left: 10px; height:40px; display: block;" src="//d1n5k7a21n8ko0.cloudfront.net/images/royal-coat-of-arms-white.svg" alt="Companies House Crest">
+                    <span style="margin-left: 10px; font-weight: normal; font-size: 0.9em;" class="govuk-header__logotype-text">Companies House</span>
+                </a>
+            </div>
+            {% if params.serviceName or params.navigation | length %}
+                <div class="govuk-header__content">
+                    {% if params.serviceName %}
+                        {% if params.serviceUrl %}
+                            <a href="{{ params.serviceUrl }}" class="govuk-header__link govuk-header__service-name">
+                                {{ params.serviceName }}
+                            </a>
+                        {% else %}
+                            <span class="govuk-header__service-name">
+        {{ params.serviceName }}
+      </span>
+                        {% endif %}
+                    {% endif %}
+                    {% if params.navigation | length %}
+                        <nav aria-label="{{ params.navigationLabel | default(menuButtonText, true) }}" class="govuk-header__navigation {%- if params.navigationClasses %} {{ params.navigationClasses }}{% endif %}">
+                            <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" {%- if params.menuButtonLabel and params.menuButtonLabel != menuButtonText %} aria-label="{{ params.menuButtonLabel }}"{% endif %} hidden>
+                                {{ menuButtonText }}
+                            </button>
+
+                            <ul id="navigation" class="govuk-header__navigation-list">
+                                {% for item in params.navigation %}
+                                    {% if item.text or item.html %}
+                                        <li class="govuk-header__navigation-item {%- if item.active %} govuk-header__navigation-item--active{% endif %}">
+                                            {% if item.href %}
+                                            <a class="govuk-header__link" href="{{ item.href }}"
+                                                    {{- govukAttributes(item.attributes) -}}>
+                                                {% endif %}
+                                                {{ item.html | safe | trim | indent(14) if item.html else item.text }}
+                                                {% if item.href %}
+                                            </a>
+                                            {% endif %}
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        {{ govukServiceNavigation({
+            serviceName: "Company Registry",
+            serviceUrl: "#",
+            navigation: [
+                {
+                    href: "/",
+                    text: "Home",
+                    active: page == 'home'
+                },
+                {
+                    href: "/companies",
+                    text: "List All Companies",
+                    active: page == 'list'
+                },
+                {
+                    href: "/register",
+                    text: "Register New Company",
+                    active: page == 'register'
+                },
+                {
+                    href: "/about",
+                    text: "About",
+                    active: page == 'about'
+                }
+            ]
+        }) }}
+
+    </header>
+
+{% endblock %}
+
+{% block main %}
+    <div class="govuk-width-container {%- if containerClasses %} {{ containerClasses }}{% endif %}">
+        {% block beforeContent %}{% endblock %}
+        <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
+            <h1 class="govuk-heading-xl">{{ heading }}</h1>
+            <p class="govuk-body">{{ description }}</p>
+
+            {% block content %}{% endblock %}
+
+        </main>
+    </div>
+{% endblock %}
+
+{% block footer %}
+
+    <footer class="govuk-footer" id="footer" role="contentinfo">
+        <div class="govuk-width-container">
+            <div class="govuk-footer__meta">
+                <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+                    <h2 class="govuk-visually-hidden">Support links</h2>
+                    <ul class="govuk-footer__inline-list">
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" id="policies-link" data-event-id="policies-footer-link" href="http://resources.companieshouse.gov.uk/serviceInformation.shtml" target="_blank">Policies</a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" id="cookies-link" data-event-id="cookies-footer-link" href="https://find-and-update.company-information.service.gov.uk/help/cookies">Cookies</a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" id="contact-us-link" data-event-id="contact-us-footer-link" href="https://find-and-update.company-information.service.gov.uk/help/contact-us" target="_blank">Contact Us</a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" id="accessibility-statement-link" data-event-id="accessibility-statement-footer-link" href="https://find-and-update.company-information.service.gov.uk/help/accessibility-statement">Accessibility statement</a>
+                        </li>
+                        <li class="govuk-footer__inline-list-item">
+                            <a class="govuk-footer__link" id="developer-link" data-event-id="developer-footer-link" href="https://developer.company-information.service.gov.uk/" target="_blank">Developers</a>
+                        </li>
+                    </ul>
+                    <span class="govuk-footer__inline-list-item">
+                          Built by <a class="govuk-footer__link" data-event-id="companies-house-footer-link" href="https://www.gov.uk/government/organisations/companies-house" rel="license">Companies House</a><br><br>
+                      </span>
+
+                    <span class="govuk-footer__licence-description">
+                          <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
+                          <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"></path>
+                      </svg>
+                        <span>All content is available under the</span>
+                        <a class="govuk-footer__link" data-event-id="open-government-licence-footer-link" href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0,</a>
+                        <span>except where otherwise stated</span>
+                      </span>
+                </div>
+
+                <div class="govuk-footer__meta-item">
+                    <a class="govuk-footer__link govuk-footer__copyright-logo" data-event-id="crown-copyright-footer-link" href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/" style="background-image: url(//d1n5k7a21n8ko0.cloudfront.net/images/govuk-crest.png);">© Crown copyright</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+{% endblock %}
+
+{% block bodyEnd %}{% endblock %}
+
+{# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+<script type="module" src="/govuk/govuk-frontend.min.js"></script>
+<script type="module">
+    import { initAll } from '/govuk/govuk-frontend.min.js'
+    initAll()
+</script>
+
+</body>
+</html>

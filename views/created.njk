@@ -1,0 +1,21 @@
+{% extends 'layout.njk' %}
+
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block content %}
+  {% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+  {{ govukPanel({
+    titleText: "Registration complete",
+    text: "Your reference number<br><strong>{{ postedCompany.registrationNumber }}</strong>"
+  }) }}
+
+  <p class="govuk-body">
+    Check out the GOV.UK Design System
+    <a href="https://design-system.service.gov.uk/styles/images/" class="govuk-link govuk-link--no-visited-state">
+      guidelines on images
+    </a>
+    for more information.
+  </p>
+
+{% endblock %}
