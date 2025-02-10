@@ -120,12 +120,11 @@ app.route('/register')
         type: req.body.type,
         companyName: req.body.companyName,
         registrationNumber: null,
-        registeredAddress: req.body.addressLine1 + "," + req.body.addressLine2 + "," + req.body.addressTown + "," + req.body.addressCounty + "," + req.body.addressPostcode,
+        registeredAddress: req.body.registeredAddress,
         active: req.body.isActive == "Active",
         incorporatedOn: null
     };
     let postedCompany = await (0, docsapp_1.setupCompany)(newCompany);
-    console.log(postedCompany);
     res.render('created', {
         page: "created",
         heading: "Company Registered",
@@ -133,6 +132,7 @@ app.route('/register')
         postedCompany: postedCompany
     });
 });
+//
 // app.delete('/companies/:id', async (req, res) => {
 //     const companyID = req.params.id;
 //     try {
