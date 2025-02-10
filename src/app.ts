@@ -4,6 +4,7 @@ import nunjucks from 'nunjucks';
 import * as process from "node:process";
 import { getCompanies, setupCompany, strikeOffCompany, getCompany } from '../Lib/docsapp';
 import { Company } from '../Lib/docsapp-model';
+import { upperCaseWord } from './helperFunctions/toUpperCase';
 
 const app = express();
 const port = Number.parseInt(process.env.PORT || "3000");
@@ -54,15 +55,24 @@ app.route("/companies")
         res.render('list', {
             page: "list",
             heading: 'A list of all the companies',
-            description: 'See all of the companies in the registry',
+            description: 'A list of the companies in the registry',
             companies: companies
         })
         })
+app.route("/companies/edit/:id")
+    .get(async (req, res) => {
+        const companyID = req.params.id;
+        let company = await getCompany(companyID);
+        res.render('editPage', {
+            page: "editPage",
+            heading: `Editing company with ID: ${companyID}`,
+            company: company
+        })
+    })
 app.route("/companies/delete/:id")
     .get(async(req, res) => {
         const companyID = req.params.id;
         let company = await getCompany(companyID);
-        console.log(company)
         res.render('deletePage', {
             page: "deletePage",
             heading: `deleting company with ID: ${companyID}`,
@@ -92,10 +102,11 @@ app.route('/register')
             type:req.body.type, 
             companyName:req.body.companyName,
             registrationNumber:null, 
-            registeredAddress:req.body.addressLine1 + "," + req.body.addressLine2 + "," + req.body.addressTown + "," + req.body.addressCounty + "," + req.body.addressPostcode, 
+            registeredAddress:req.body.addressLine1 + ",<br>" + req.body.addressTown + ",<br>" + req.body.addressCounty + ",<br>" + req.body.addressPostcode, 
             active:req.body.isActive=="Active", 
             incorporatedOn: null
         };
+        newCompany.registeredAddress = upperCaseWord(newCompany.registeredAddress);
         
         let postedCompany = await setupCompany(newCompany)
         console.log(postedCompany);

@@ -22,13 +22,16 @@
         text: company.companyName 
       },
       { 
-        text: company.registeredAddress 
+        html: company.registeredAddress | safe
       },
       { 
         text: "Active" if not company.isActive
       },
       { 
         text: company.incorporatedOn 
+      },
+      {
+        html: "<a href=\"/companies/edit/"+company.registrationNumber+"\">⚙️</a>"
       },
       { 
         html: "<a href=\"/companies/delete/"+company.registrationNumber+"\">🔪📁☠️</a>" 
@@ -37,7 +40,7 @@
   {% endfor %}
   
     
-
+{% if companyList.length > 0 %}
 {{ govukTable({
   caption: "Companies",
   captionClasses: "govuk-table__caption--m",
@@ -62,12 +65,17 @@
         text: "Incorporated On"
     },
     {
+        text: "Edit"
+    },
+    {
         text:"Delete"
     }
   ],
   rows: companyList
 }) }}
-
+{% else %}
+  <p class="govuk-body">No companies found. Please <a href="/register">add a company </a> to see it listed here.</p>
+  {% endif %}
 
   <p class="govuk-body">
     Check out the GOV.UK Design System

@@ -41,6 +41,7 @@ const path_1 = __importDefault(require("path"));
 const nunjucks_1 = __importDefault(require("nunjucks"));
 const process = __importStar(require("node:process"));
 const docsapp_1 = require("../Lib/docsapp");
+const toUpperCase_1 = require("./helperFunctions/toUpperCase");
 const app = (0, express_1.default)();
 const port = Number.parseInt(process.env.PORT || "3000");
 const host = process.env.HOST || '0.0.0.0';
@@ -82,15 +83,24 @@ app.route("/companies")
     res.render('list', {
         page: "list",
         heading: 'A list of all the companies',
-        description: 'See all of the companies in the registry',
+        description: 'A list of the companies in the registry',
         companies: companies
+    });
+});
+app.route("/companies/edit/:id")
+    .get(async (req, res) => {
+    const companyID = req.params.id;
+    let company = await (0, docsapp_1.getCompany)(companyID);
+    res.render('editPage', {
+        page: "editPage",
+        heading: `Editing company with ID: ${companyID}`,
+        company: company
     });
 });
 app.route("/companies/delete/:id")
     .get(async (req, res) => {
     const companyID = req.params.id;
     let company = await (0, docsapp_1.getCompany)(companyID);
-    console.log(company);
     res.render('deletePage', {
         page: "deletePage",
         heading: `deleting company with ID: ${companyID}`,
@@ -120,10 +130,11 @@ app.route('/register')
         type: req.body.type,
         companyName: req.body.companyName,
         registrationNumber: null,
-        registeredAddress: req.body.addressLine1 + "," + req.body.addressLine2 + "," + req.body.addressTown + "," + req.body.addressCounty + "," + req.body.addressPostcode,
+        registeredAddress: req.body.addressLine1 + ",<br>" + req.body.addressTown + ",<br>" + req.body.addressCounty + ",<br>" + req.body.addressPostcode,
         active: req.body.isActive == "Active",
         incorporatedOn: null
     };
+    newCompany.registeredAddress = (0, toUpperCase_1.upperCaseWord)(newCompany.registeredAddress);
     let postedCompany = await (0, docsapp_1.setupCompany)(newCompany);
     console.log(postedCompany);
     res.render('created', {
