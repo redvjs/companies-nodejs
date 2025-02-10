@@ -77,7 +77,6 @@ app.route("/companies/delete/:id")
             heading: "deleted a comp"
         })
     })
-
 app.route('/register')
     .get((req, res) => {
         let newCompany= {type:"",companyName:"",registrationNumber:0, registeredAddress:"", active:true, incorporatedOn: Date()};
@@ -93,10 +92,13 @@ app.route('/register')
             type:req.body.type, 
             companyName:req.body.companyName,
             registrationNumber:null, 
-            registeredAddress:req.body.registeredAddress, 
+            registeredAddress:req.body.addressLine1 + "," + req.body.addressLine2 + "," + req.body.addressTown + "," + req.body.addressCounty + "," + req.body.addressPostcode, 
             active:req.body.isActive=="Active", 
-            incorporatedOn: null};
+            incorporatedOn: null
+        };
+        
         let postedCompany = await setupCompany(newCompany)
+        console.log(postedCompany);
         res.render('created', {
             page: "created",
             heading: "Company Registered",
@@ -104,7 +106,7 @@ app.route('/register')
             postedCompany: postedCompany
         })
     })
-//
+
 // app.delete('/companies/:id', async (req, res) => {
 //     const companyID = req.params.id;
 //     try {

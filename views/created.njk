@@ -4,10 +4,10 @@
 
 {% block content %}
   {% from "govuk/components/panel/macro.njk" import govukPanel %}
-
+  {% set referenceNumberHtml = "Your reference number<br><strong>" + postedCompany.registrationNumber + "</strong>" %}
   {{ govukPanel({
     titleText: "Registration complete",
-    text: "Your reference number<br><strong>{{ postedCompany.registrationNumber }}</strong>"
+    html: referenceNumberHtml
   }) }}
 
   <p class="govuk-body">

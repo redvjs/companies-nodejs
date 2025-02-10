@@ -10,7 +10,7 @@ exports.modifyCompany = modifyCompany;
 exports.patchCompany = patchCompany;
 exports.strikeOffCompany = strikeOffCompany;
 const axios_1 = __importDefault(require("axios"));
-let baseUrl = process.env.TARGET_URL || "http://localhost:8080/";
+let baseUrl = process.env.TARGET_URL || "http://localhost/companies";
 const config = {
     baseURL: baseUrl
 };
